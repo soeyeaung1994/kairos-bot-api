@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: wss-backend-demo
+  datasource:
+    url: jdbc:h2:mem:wssdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
