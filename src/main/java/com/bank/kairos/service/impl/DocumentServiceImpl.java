@@ -1,7 +1,7 @@
 package com.bank.kairos.service.impl;
 
 import com.bank.kairos.dto.DocumentDTO;
-import com.bank.kairos.entity.DocumentEntity;
+import com.bank.kairos.entity.Document;
 import com.bank.kairos.mapper.DocumentMapper;
 import com.bank.kairos.repository.DocumentRepository;
 import com.bank.kairos.service.DocumentService;
@@ -20,7 +20,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO save(DocumentDTO documentDTO) {
-        DocumentEntity entity = documentMapper.toEntity(documentDTO);
+        Document entity = documentMapper.toEntity(documentDTO);
         entity.setStatus("RECEIVED");
         return documentMapper.toDto(documentRepository.save(entity));
     }

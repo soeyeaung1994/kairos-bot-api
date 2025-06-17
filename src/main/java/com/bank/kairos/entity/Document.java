@@ -15,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DocumentEntity {
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
