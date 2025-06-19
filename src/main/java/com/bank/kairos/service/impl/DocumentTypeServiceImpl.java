@@ -1,14 +1,14 @@
 package com.bank.kairos.service.impl;
 
+import com.bank.kairos.dto.DocumentTypeDTO;
 import com.bank.kairos.entity.DocumentType;
-import com.bank.kairos.entity.User;
+import com.bank.kairos.mapper.DocumentTypeMapper;
 import com.bank.kairos.repository.DocumentTypeRepository;
 import com.bank.kairos.service.DocumentTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: Soe Ye Aung
@@ -19,9 +19,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DocumentTypeServiceImpl implements DocumentTypeService {
     private final DocumentTypeRepository documentTypeRepository;
+    private final DocumentTypeMapper mapper;
 
     @Override
-    public List<DocumentType> getDocumentTypesForTenant(String tenant) {
-        return documentTypeRepository.findByTenant(tenant);
+    public List<DocumentTypeDTO> getDocumentTypesForTenant(String tenant) {
+        List<DocumentType> entities = documentTypeRepository.findByTenant(tenant);
+        return mapper.toDtoList(entities);
     }
 }

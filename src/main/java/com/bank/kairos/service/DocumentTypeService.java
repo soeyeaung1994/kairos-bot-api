@@ -1,7 +1,6 @@
 package com.bank.kairos.service;
 
-import com.bank.kairos.entity.DocumentType;
-import com.bank.kairos.entity.User;
+import com.bank.kairos.dto.DocumentTypeDTO;
 
 import java.util.List;
 
@@ -11,5 +10,5 @@ import java.util.List;
  * @Time: 7:29 pm
  */
 public interface DocumentTypeService {
-    List<DocumentType> getDocumentTypesForTenant(String tenant);
+    List<DocumentTypeDTO> getDocumentTypesForTenant(String tenant);
 }

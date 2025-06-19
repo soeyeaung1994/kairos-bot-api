@@ -1,9 +1,7 @@
 package com.bank.kairos.controller;
 
-import com.bank.kairos.entity.DocumentType;
-import com.bank.kairos.entity.User;
+import com.bank.kairos.dto.DocumentTypeDTO;
 import com.bank.kairos.service.DocumentTypeService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +15,7 @@ import java.util.List;
  * @Time: 4:42 pm
  */
 @RestController
-@RequestMapping("/document-types")
+@RequestMapping("/api/document-types")
 public class DocumentTypeController {
     private final DocumentTypeService documentTypeService;
 
@@ -26,7 +24,7 @@ public class DocumentTypeController {
     }
 
     @GetMapping
-    public List<DocumentType> getByTenant(@RequestParam String tenant) {
+    public List<DocumentTypeDTO> getByTenant(@RequestParam String tenant) {
         return documentTypeService.getDocumentTypesForTenant(tenant);
     }
 }

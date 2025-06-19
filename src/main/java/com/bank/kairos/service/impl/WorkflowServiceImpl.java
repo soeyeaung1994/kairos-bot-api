@@ -1,8 +1,10 @@
 package com.bank.kairos.service.impl;
 
-import com.bank.kairos.entity.User;
+import com.bank.kairos.dto.User;
+import com.bank.kairos.dto.WorkflowDTO;
 import com.bank.kairos.entity.Workflow;
 import com.bank.kairos.entity.WorkflowMetadata;
+import com.bank.kairos.mapper.WorkflowMapper;
 import com.bank.kairos.repository.WorkflowRepository;
 import com.bank.kairos.service.WorkflowService;
 import jakarta.persistence.criteria.Predicate;
@@ -28,36 +30,40 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WorkflowServiceImpl implements WorkflowService {
     private final WorkflowRepository workflowRepository;
+    private final WorkflowMapper mapper;
 
     public String generateWorkflowId(String userId) {
         return "WRKFLW_" + userId + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss"));
     }
 
     @Override
-    public Workflow createWorkflow(User user, String docType, Map<String, String> metadataMap) {
-        String id = generateWorkflowId(user.getId());
-        Workflow wf = new Workflow(id, user.getId(), user.getTenant(), docType, "SUBMITTED");
+    public WorkflowDTO createWorkflow(User user, String docType, Map<String, String> metadataMap) {
+        String id = generateWorkflowId(user.getUsername());
+        Workflow wf = new Workflow(id, user.getUsername(), user.getSelectedTenant(), docType, "SUBMITTED");
         List<WorkflowMetadata> metadataList = metadataMap.entrySet().stream()
                 .map(e -> new WorkflowMetadata(wf, e.getKey(), e.getValue()))
                 .toList();
         wf.setMetadata(metadataList);
-        return workflowRepository.save(wf);
+        Workflow workflow = workflowRepository.save(wf);
+        return mapper.toDto(workflow);
     }
 
     @Override
-    public Optional<Workflow> getWorkflow(String workflowId) {
-        return workflowRepository.findByWorkflowId(workflowId);
+    public Optional<WorkflowDTO> getWorkflow(String workflowId) {
+        Optional<Workflow> workflow = workflowRepository.findByWorkflowId(workflowId);
+        return mapper.toOptionalDto(workflow);
     }
 
     @Override
-    public Page<Workflow> searchPaginated(int page, int size, String tenant, String docType, String userId) {
+    public Page<WorkflowDTO> searchPaginated(int page, int size, String tenant, String docType, String userId) {
         Pageable pageable = PageRequest.of(page, size);
-        return workflowRepository.findAll((root, query, cb) -> {
+        Page<Workflow> workflowPage = workflowRepository.findAll((root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (tenant != null) predicates.add(cb.equal(root.get("tenant"), tenant));
             if (docType != null) predicates.add(cb.equal(root.get("documentType"), docType));
             if (userId != null) predicates.add(cb.equal(root.get("userId"), userId));
             return cb.and(predicates.toArray(new Predicate[0]));
         }, pageable);
+        return mapper.toPageDto(workflowPage);
     }
 }

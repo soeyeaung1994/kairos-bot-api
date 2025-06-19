@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/metadata")
+@RequestMapping("/api/metadata")
 public class MetadataController {
     private final MetadataService metadataService;
 

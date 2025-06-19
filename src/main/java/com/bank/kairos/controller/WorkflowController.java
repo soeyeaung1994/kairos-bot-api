@@ -1,9 +1,7 @@
 package com.bank.kairos.controller;
 
 import com.bank.kairos.dto.WorkflowDTO;
-import com.bank.kairos.entity.User;
-import com.bank.kairos.entity.Workflow;
-import com.bank.kairos.mapper.WorkflowMapper;
+import com.bank.kairos.dto.User;
 import com.bank.kairos.service.WorkflowService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
@@ -21,7 +19,7 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("/workflow")
+@RequestMapping("/api/workflow")
 public class WorkflowController {
     private final WorkflowService workflowService;
 
@@ -35,16 +33,16 @@ public class WorkflowController {
         User user = (User) request.getAttribute("authenticatedUser");
         String docType = (String) requestBody.get("documentType");
         Map<String, String> metadata = (Map<String, String>) requestBody.get("metadata");
-        return new WorkflowDTO(workflowService.createWorkflow(user, docType, metadata));
+        return workflowService.createWorkflow(user, docType, metadata);
     }
 
     @PostMapping("/track")
     public ResponseEntity<?> trackWorkflow(@RequestBody Map<String, String> requestBody) {
         String workflowId = requestBody.get("workflowId");
-        Optional<Workflow> optionalWorkflow = workflowService.getWorkflow(workflowId);
+        Optional<WorkflowDTO> optionalWorkflow = workflowService.getWorkflow(workflowId);
 
         if (optionalWorkflow.isPresent()) {
-            WorkflowDTO dto = new WorkflowDTO(optionalWorkflow.get());
+            WorkflowDTO dto = optionalWorkflow.get();
             return ResponseEntity.ok(dto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Workflow not found");
@@ -57,7 +55,6 @@ public class WorkflowController {
                                      @RequestParam(required = false) String tenant,
                                      @RequestParam(required = false) String documentType,
                                      @RequestParam(required = false) String userId) {
-        return workflowService.searchPaginated(page, size, tenant, documentType, userId)
-                .map(WorkflowDTO::new);
+        return workflowService.searchPaginated(page, size, tenant, documentType, userId);
     }
 }

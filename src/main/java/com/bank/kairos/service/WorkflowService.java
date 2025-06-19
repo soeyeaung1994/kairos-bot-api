@@ -1,7 +1,7 @@
 package com.bank.kairos.service;
 
-import com.bank.kairos.entity.User;
-import com.bank.kairos.entity.Workflow;
+import com.bank.kairos.dto.User;
+import com.bank.kairos.dto.WorkflowDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface WorkflowService {
 
-    Workflow createWorkflow(User user, String docType, Map<String, String> metadataMap);
-    Optional<Workflow> getWorkflow(String workflowId);
-    Page<Workflow> searchPaginated(int page, int size, String tenant, String docType, String userId);
+    WorkflowDTO createWorkflow(User user, String docType, Map<String, String> metadataMap);
+    Optional<WorkflowDTO> getWorkflow(String workflowId);
+    Page<WorkflowDTO> searchPaginated(int page, int size, String tenant, String docType, String userId);
 }
